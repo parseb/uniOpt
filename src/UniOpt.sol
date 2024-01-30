@@ -7,7 +7,7 @@ import "./interfaces/IUniOpt.sol";
 /// @title UniOpt
 /// @author parseb | Bogdan A
 contract UniOpt is Fx {
-    constructor(address denominator) AaveFx(denominator) {}
+    
 
     /// @notice First point of contact of a Position. Can be executed only by the position taker that pays for it.
     /// @notice Transfers the collateral from the LP. In case of Sell orders, mints DAI as a substitute for selling.

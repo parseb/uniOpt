@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.20;
 
-import {IUniOpt, Position, State} from "../interfaces/IGHOptim.sol";
+import {IUniOpt, Position, State} from "../interfaces/IUniOpt.sol";
 import {VerifySignature} from "../utils/VerifySignature.sol";
 
 abstract contract Fx is IUniOpt, VerifySignature {
 
+    address public immutable DEPLOYER;
 
     mapping(address => bytes32[]) userHashes;
     mapping(bytes32 => Position) hashPosition;
 
     constructor() {
-        genesis = msg.sender;
+        DEPLOYER = msg.sender;
     }
 
     event NewPosition(bytes32 positionHash);
