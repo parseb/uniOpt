@@ -7,4 +7,4 @@ ds-test/=lib/forge-std/lib/ds-test/src/
 erc4626-tests/=lib/gho-core/lib/aave-stk-v1-5/lib/openzeppelin-contracts/lib/erc4626-tests/
 eth-gas-reporter/=lib/gho-core/node_modules/eth-gas-reporter/
 forge-std/=lib/forge-std/src/
-@openzeppelin/=lib/openzeppelin-contracts/
+@openzeppelin/=lib/openzeppelin-contracts/contracts/
