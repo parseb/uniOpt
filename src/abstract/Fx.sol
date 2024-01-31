@@ -3,17 +3,16 @@ pragma solidity 0.8.20;
 
 import {IUniOpt, Position, State} from "../interfaces/IUniOpt.sol";
 import {VerifySignature} from "../utils/VerifySignature.sol";
+import "../abstract/Dependencies.sol";
 
-abstract contract Fx is IUniOpt, VerifySignature {
+abstract contract Fx is IUniOpt, VerifySignature, Dependencies {
 
-    address public immutable DEPLOYER;
 
     mapping(address => bytes32[]) userHashes;
     mapping(bytes32 => Position) hashPosition;
+    mapping(address => uint256) assetTotalLiable;
+    mapping(address => bool) isAllowedAToken;
 
-    constructor() {
-        DEPLOYER = msg.sender;
-    }
 
     event NewPosition(bytes32 positionHash);
     event PositionLiquid(bytes32 positionHash);
@@ -32,6 +31,25 @@ abstract contract Fx is IUniOpt, VerifySignature {
         address signer = recoverSigner(h, signature);
 
         return (signer == P.lper);
+    }
+
+
+    /// @notice gets all the aToken underlying assets and their prices
+    function getAllAssetsPrices() public view returns (address[] memory assets, uint256[] memory prices) {
+        // assets = AaveV3Ethereum.POOL.getReservesList();
+        // prices = AaveV3Ethereum.ORACLE.getAssetsPrices(assets);
+    }
+
+    //// @notice gets aToken address for Aave depositable asset
+    /// @param assetAddress underlying ERC20 token address
+    function getATokenAddressFor(address assetAddress) public view returns (address aToken) {
+        // (aToken,,) = AaveV3Ethereum.AAVE_PROTOCOL_DATA_PROVIDER.getReserveTokensAddresses(assetAddress);
+    }
+
+    /// @notice gets Aave Oracle price given a base underlying asset address, response uses 8 decimals
+    /// @param Asset address of base depositable asset
+    function getPriceOfAsset(address Asset) public view returns (uint256) {
+        // return ORACLE.getAssetPrice(Asset);
     }
 
 

@@ -13,7 +13,7 @@ contract UniOpt is Fx {
     /// @notice Transfers the collateral from the LP. In case of Sell orders, mints DAI as a substitute for selling.
     /// @param P Complete position containing execution data ase well as Permit signature
     function takePosition(Position memory P) external returns (bytes32) {
-        if (!isAllowedAToken[P.asset]) revert Illegal();
+        if (! isAllowedAToken[P.asset]) revert Illegal();
         if (uint8(P.state) <= 1) revert Untaken();
         if (P.executionPrice * P.wantedPrice * P.amount == 0) revert AZero();
         if (P.executionPrice >= P.wantedPrice) revert NotADex();
@@ -32,10 +32,11 @@ contract UniOpt is Fx {
 
         if (cost / P.amount > executionPrice) revert ValueSensitivity();
         if (
-            !(
-                // DAI.transferFrom(_msgSender(), address(this), cost)
-                    // && IAToken(P.asset).transferFrom(P.lper, address(this), amount)
-            )
+            // !(
+            //     DAI.transferFrom(_msgSender(), address(this), cost)
+            //         && IAToken(P.asset).transferFrom(P.lper, address(this), amount)
+            // )
+            false
         ) {
             revert TransferFaileure();
         }
@@ -43,7 +44,7 @@ contract UniOpt is Fx {
         assetTotalLiable[P.asset] += amount;
 
         if (P.state == State.Sell) {
-            uint256 b = DAI.balanceOf(address(this));
+            // uint256 b = DAI.balanceOf(address(this));
             // DAI.mint(address(this), executionPrice * P.amount);
             // if (b >= DAI.balanceOf(address(this))) revert AaveRug();
         }
@@ -119,13 +120,13 @@ contract UniOpt is Fx {
         emit PositionLiquid(positionHash);
     }
 
-    /// @notice Sweeps Atoken surplus and redistributes it to Aave threasury and genesis
+    /// @notice Sweeps Atoken surplus and redistributes it
     /// @notice open execution, rewards 1% to executor
     /// @param Aasset_ wanted aToken address
     function profitTake(address Aasset_) external {
         uint256 onePercentAlmost = IAToken(Aasset_).balanceOf(address(this)) / 101;
-        IAToken(Aasset_).transfer(genesis, (onePercentAlmost * 69) - assetTotalLiable[Aasset_]);
-        IAToken(Aasset_).transfer(genesis, (onePercentAlmost) - assetTotalLiable[Aasset_]);
+        IAToken(Aasset_).transfer(DevChest, (onePercentAlmost * 69) - assetTotalLiable[Aasset_]);
+        IAToken(Aasset_).transfer(DevChest, (onePercentAlmost) - assetTotalLiable[Aasset_]);
         IAToken(Aasset_).transfer(
             IAToken(Aasset_).RESERVE_TREASURY_ADDRESS(),
             IAToken(Aasset_).balanceOf(address(this)) - assetTotalLiable[Aasset_]

@@ -10,7 +10,7 @@ contract CounterScript is Script {
     function run() public {
         vm.startBroadcast(vm.envUint("SPARK_PVK1"));
 
-        GHOptim G = new UniOpt();
+        UniOpt G = new UniOpt();
         string memory ghotoken;  /// = string.concat("GHOtoken: ", '"', vm.toString(GHO_MAINNET_ADDRESS), '"');
         string memory ghoptim = string.concat("GHOptim: ", '"', vm.toString(address(G)), '"');
         string memory log = string.concat("export const contractAddr = {", ghoptim, " , ", ghotoken, "}");
